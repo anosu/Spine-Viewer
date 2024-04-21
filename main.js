@@ -8,7 +8,7 @@ app.commandLine.appendSwitch('charset', 'utf-8');
 process.env.CACHE_PATH = path.join(__dirname, 'cache')
 process.env.FFMPEG_PATH = path.join(__dirname, 'ffmpeg', 'ffmpeg.exe');
 
-let win;
+let win, sub;
 let animation;
 
 const createWindow = (log) => {
@@ -18,7 +18,6 @@ const createWindow = (log) => {
         frame: false,
         minWidth: 400,
         minHeight: 40,
-        // devTools: false,
         fullscreenable: false,
         autoHideMenuBar: true,
         webPreferences: {
@@ -34,8 +33,41 @@ const createWindow = (log) => {
         win.webContents.send('set-unmaximized-icon')
     })
 
-    win.loadFile('src/index.html').then(() => {
+    win.loadFile('./src/index.html').then(() => {
+        // win.openDevTools()
         win.webContents.send('debug', log)
+        sub = new BrowserWindow({
+            width: 450,
+            height: 300,
+            frame: false,
+            parent: win,
+            modal: true,
+            show: false,
+            resizable: false,
+            minimizable: false,
+            maximizable: false,
+            fullscreenable: false,
+            autoHideMenuBar: true,
+            webPreferences: {
+                preload: path.join(__dirname, 'preload.js')
+            }
+        })
+        sub.loadFile('./src/pages/export.html').then(() => {
+            ipcMain.on('open-export-window', (ev, animations) => {
+                sub.webContents.send('receive-export-animations', animations)
+                sub.show()
+            })
+            ipcMain.on('close-export-window', () => {
+                sub.hide()
+                win.webContents.send('export-window-closed')
+            })
+            ipcMain.on('send-export-progress', (ev, data) => {
+                sub.webContents.send('set-export-progress', data)
+            })
+            ipcMain.on('send-export-options', (ev, options) => {
+                win.webContents.send('receive-export-options', options)
+            })
+        })
     })
 
 }
@@ -137,6 +169,7 @@ app.whenReady().then(() => {
                     fs.rmdirSync(imagePath)
                 }
             )
+            sub.webContents.send('export-complete')
             win.webContents.send('export-complete')
         })
     })

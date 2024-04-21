@@ -26,14 +26,14 @@ const resetSpeed = () => {
 
 const setMix = (mix) => {
     app.stage.children.forEach(a => {
-        a.state.defaultMix = mix
+        a.state.data.defaultMix = mix
     })
 }
 
 const resetMix = () => {
     setMix(0)
     mixInput.value = 0
-    getById('mix-show').innerText = '0.0s'
+    getById('default-mix-show').innerText = '0.0s'
 }
 
 const setAlphaMode = (mode) => {

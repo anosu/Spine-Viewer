@@ -4,13 +4,14 @@ let fileInput = getById('fileInput')
 let colorInput = getById('colorInput')
 let zoomInput = getById('zoom')
 let speedInput = getById('speed')
-let mixInput = getById('mix')
+let mixInput = getById('default-mix')
 let skinList = getById('skins')
 let animationList = getById('animations')
 let slotList = getById('slots')
 let alphaMode = 1
 let availableAnimations = []
 let slots = []
+let isExporting = false
 
 // pixi.js app
 const app = new PIXI.Application({
@@ -50,7 +51,6 @@ function onLoaded(loader, res) {
     skinList.innerHTML = ''
     slotList.innerHTML = ''
     animationList.innerHTML = ''
-    getById('export-animation').innerHTML = ''
 
     skins.forEach(s => {
         const li = createTag('li')
@@ -88,10 +88,6 @@ function onLoaded(loader, res) {
         label.append(span)
         li.append(label)
         animationList.append(li)
-
-        const option = createTag('option')
-        option.value = option.innerText = a.name
-        getById('export-animation').append(option)
     })
     skeletons.forEach(skeleton => {
         for (const slot of skeleton.skeleton.slots) {
@@ -145,6 +141,7 @@ function onLoaded(loader, res) {
         let animations = []
         const speed = parseFloat(speedInput.value)
         const scale = parseInt(zoomInput.value) / 100
+        const defaultMix = parseFloat(mixInput.value)
         for (const key in res) {
             if (key.endsWith('skel') || key.endsWith('json')) {
                 try {
@@ -153,6 +150,7 @@ function onLoaded(loader, res) {
                     skeleton.position.set(app.view.clientWidth / 2, app.view.clientHeight / 2)
                     skeleton.scale.x = skeleton.scale.y = scale
                     skeleton.state.timeScale = speed
+                    skeleton.state.data.defaultMix = defaultMix
                     skeleton.autoUpdate = true;
                     const skeletonSkins = skeleton.spineData.skins.map(s => s.name)
                     const skeletonAnimations = skeleton.spineData.animations.map(a => {
@@ -285,19 +283,12 @@ function toggleAnimation(ev) {
     }
 }
 
-const showExportBox = () => {
-    getById('export-box').classList.remove('hide');
-    getById('export-box').classList.add('show');
-    getById('export-overlay').style.display = 'block';
+function openExportWindow() {
+    isExporting = true
+    preload.openExportWindow(availableAnimations)
 }
 
-const hideExportBox = () => {
-    getById('export-box').classList.remove('show');
-    getById('export-box').classList.add('hide');
-    getById('export-overlay').style.display = 'none';
-}
-
-const getDurationByAnimationName = (name) => {
+function getDurationByAnimationName(name) {
     for (const a of availableAnimations) {
         if (a.name === name) {
             return parseFloat(a.duration)
@@ -306,59 +297,37 @@ const getDurationByAnimationName = (name) => {
     return 0
 }
 
-async function exportAnimation() {
-    const format = getById('export-format').value
-    let framerate = parseInt(getById('export-framerate').value)
-    const animation = getById('export-animation').value
-    const output = getById('export-path').value
-    const duration = getDurationByAnimationName(animation)
-    if (!duration || !output) return
-    if (Number.isNaN(framerate) || framerate < 1 || framerate > 60) {
-        framerate = format === 'MP4' ? 30 : 20
-    }
+async function exportAnimation(options) {
+    const {format, framerate, animation, output, duration} = options
     const speed = parseFloat(speedInput.value)
     const delta = 1 / framerate
     const frameNumber = Math.floor(duration / speed / delta)
 
     let frameIndex = 0
-    getById('export-progress').value = '0'
-    getById('export-progress').setAttribute('max', `${frameNumber + 1}`)
-    getById('progress-show').innerText = `0/${frameNumber}`
-    getById('export-button').disabled = true
-    getById('hide-export-box-button').disabled = true
-    app.stage.children.forEach(a => a.autoUpdate = false)
+    preload.sendExportProgress({step: 0, frameNumber})
 
-    await preload.prepareExport(animation)
-    playAnimation(0, animation, false)
-    app.stage.children.forEach(a => a.update(0))
-    setTimeout(animate, 100)
+    app.stage.children.forEach(a => a.autoUpdate = false)
+    preload.prepareExport(animation).then(() => {
+        playAnimation(0, animation, false)
+        app.stage.children.forEach(a => a.update(0))
+        setTimeout(animate, 100)
+    })
 
     async function animate() {
         if (frameIndex >= frameNumber) {
-            getById('progress-show').innerText = '合成中...'
+            preload.sendExportProgress({step: 2})
             preload.executeExport({format, framerate, animation, output})
             return
         }
         let data = app.view.toDataURL('image/png')
-        let result = await preload.saveImage({
+        preload.saveImage({
             index: String(frameIndex++).padStart(5, '0'),
             data
-        })
-        if (result) {
-            getById('export-progress').value = `${frameIndex}`
-            getById('progress-show').innerText = `${frameIndex}/${frameNumber}`
+        }).then(() => {
+            preload.sendExportProgress({step: 1, frameIndex})
             app.stage.children.forEach(a => a.update(delta))
             animate()
-        } else {
-            getById('export-button').disabled = false
-            getById('hide-export-box-button').disabled = false
-            getById('export-progress').value = 0
-            getById('progress-show').innerText = 'Error'
-            app.stage.children.forEach(a => a.autoUpdate = false)
-        }
-    }
-}
+        })
 
-const selectExportPath = async () => {
-    getById('export-path').value = await preload.selectExportPath()
+    }
 }

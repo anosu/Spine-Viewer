@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/export.css">
+    <title>Export</title>
+</head>
+<body>
+<div id="export-box">
+    <div class="export-option label">
+        <label for="export-format">输出格式：</label>
+        <label for="export-framerate">帧率：</label>
+        <label for="export-animation">目标动画：</label>
+        <label for="export-path">输出目录：</label>
+    </div>
+    <div class="export-option input">
+        <select id="export-format">
+            <option selected>GIF</option>
+            <option>APNG</option>
+            <option>MP4</option>
+        </select>
+        <input type="number" value="24" min="1" max="60" id="export-framerate">
+        <select id="export-animation">
+            <option value="">--None--</option>
+        </select>
+        <span class="path-select">
+            <input type="text" id="export-path">
+            <button onclick="selectExportPath()">选择</button>
+        </span>
+    </div>
+
+    <span class="export-progress-show">
+        <span class="export-progress-wrapper">
+            <progress id="export-progress" value="0" max="1"></progress>
+        </span>
+        <span id="progress-show">0/0</span>
+    </span>
+
+    <span class="export-option button">
+        <button onclick="preload.closeExportWindow()" id="hide-export-box-button">关闭</button>
+        <button onclick="getExportOptions()" id="export-button">导出</button>
+    </span>
+</div>
+<script src="../js/util.js"></script>
+<script src="../js/export.js"></script>
+</body>
+</html>

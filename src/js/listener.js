@@ -2,6 +2,7 @@
 
 // 监听拖拽文件
 getById('main').addEventListener('dragover', (ev) => {
+    if (isExporting) return
     ev.preventDefault()
     getById('mask').style.display = 'flex'
 })
@@ -12,6 +13,7 @@ getById('mask').addEventListener('dragleave', (ev) => {
 })
 
 getById('main').addEventListener('drop', async (ev) => {
+    if (isExporting) return
     ev.preventDefault()
     getById('mask').style.display = 'none'
     const filePaths = Array.from(ev.dataTransfer.files).map(f => f.path).filter(p => p.endsWith('skel') || p.endsWith('json'))
@@ -86,16 +88,11 @@ speedInput.addEventListener('input', () => {
     getById('speed-show').innerText = parseFloat(speedInput.value).toFixed(2) + 'x'
 })
 
-// mixInput.addEventListener('input', () => {
-//     let mix = parseFloat(mixInput.value)
-//     setMix(mix)
-//     mixShow.innerText = parseFloat(mixInput.value).toFixed(1) + 's'
-// })
-
-getById('export-overlay').addEventListener('click', () => {
-    getById('hide-export-box-button').click()
+mixInput.addEventListener('input', () => {
+    let mix = parseFloat(mixInput.value)
+    setMix(mix)
+    getById('default-mix-show').innerText = mix.toFixed(1) + 's'
 })
-
 
 // 监听右键菜单
 scene.addEventListener('contextmenu', (ev) => {
@@ -109,6 +106,9 @@ preload.onCopyImage(() => {
     })
 })
 
+// 监听接收导出选项
+preload.onReceiveExportOptions(exportAnimation)
+
 // 监听窗口最大化的切换
 preload.onMaximize(() => {
     getById('maximize-icon').innerText = '❐'
@@ -119,11 +119,11 @@ preload.onUnMaximize(() => {
 })
 
 preload.onExportComplete(() => {
-    getById('export-button').disabled = false
-    getById('hide-export-box-button').disabled = false
-    getById('export-progress').value = getById('export-progress').getAttribute('max')
-    getById('progress-show').innerText = '完成'
     app.stage.children.forEach(a => a.autoUpdate = true)
+})
+
+preload.onExportWindowClosed(() => {
+    isExporting = false
 })
 
 preload.onDebug(console.log)

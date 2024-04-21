@@ -1,0 +1,178 @@
+* {
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    padding: 30px;
+    background-color: #3a3a3a;
+    -webkit-app-region: drag
+}
+
+#export-box {
+    color: white;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+#export-box * {
+    -webkit-app-region: no-drag
+}
+
+.export-option.label {
+    gap: 10px;
+    flex-grow: 2;
+    display: flex;
+    font-size: 18px;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.export-option.label > * {
+    line-height: 35px;
+    height: 34px;
+}
+
+.export-option.input {
+    gap: 10px;
+    height: 20px;
+    flex-grow: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.export-option.input > * {
+    margin: 5px 0;
+    height: 20px;
+}
+
+.path-select {
+    gap: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.export-option input:focus,
+.export-option select:focus {
+    outline: none;
+}
+
+.export-option input[type='text'] {
+    height: 24px;
+    border: none;
+    padding: 0 5px;
+    border-radius: 3px;
+}
+
+.export-option input[type='number'] {
+    width: 50px;
+    border: none;
+    height: 24px;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.export-option button {
+    border: none;
+    cursor: pointer;
+    padding: 3px 12px;
+    margin-bottom: 1px;
+    border-radius: 5px;
+}
+
+.export-option.input select {
+    display: block;
+    height: 30px;
+    padding: 3px 6px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.export-progress-show {
+    left: 30px;
+    bottom: 30px;
+    display: flex;
+    font-size: 18px;
+    position: absolute;
+}
+
+.export-progress-wrapper {
+    margin-right: 10px;
+    border-radius: 50px;
+    overflow: hidden;
+}
+
+#export-progress {
+    height: 100%;
+    width: 120px;
+}
+
+#progress-show {
+    font-size: 20px;
+    line-height: 24px;
+}
+
+.export-option.button {
+    right: 30px;
+    bottom: 20px;
+    position: absolute;
+}
+
+.export-option.button button {
+    color: white;
+    font-size: 20px;
+    padding: 7px 15px;
+    background-color: #7e7e7e;
+}
+
+.export-option.button button:hover {
+    background-color: #707070;
+}
+
+.export-option.button button:active {
+    background-color: #606060;
+}
+
+.export-option.button button:disabled {
+    cursor: not-allowed;
+    background-color: #606060;
+}
+
+progress {
+    background-color: transparent;
+}
+
+progress::-webkit-progress-value {
+    background-color: #496e49;
+    animation: progress 2s ease;
+}
+
+@keyframes progress {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}

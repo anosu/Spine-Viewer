@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <title>Spine Viewer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="./js/pixi.min.js"></script>
-    <script src="./js/pixi-spine.js"></script>
+    <script src="assets/js/pixi.min.js"></script>
+    <script src="assets/js/pixi-spine.js"></script>
     <link rel="stylesheet" href="./css/main.css">
 </head>
 <body>
@@ -38,12 +38,12 @@
             <span id="speed-show" class="option-value">1.00x</span>
             <button onclick="resetSpeed()">重置</button>
         </div>
-        <!--        <div class="row">-->
-        <!--            <label for="mix" class="option-label">Mix</label>-->
-        <!--            <input type="range" id="mix" value="0" min="0" max="5" step="0.1">-->
-        <!--            <span id="mix-show" class="option-value">0.0s</span>-->
-        <!--            <button onclick="resetMix()">重置</button>-->
-        <!--        </div>-->
+        <div class="row">
+            <label for="default-mix" class="option-label">Mix</label>
+            <input type="range" id="default-mix" value="0" min="0" max="2" step="0.1">
+            <span id="default-mix-show" class="option-value">0.0s</span>
+            <button onclick="resetMix()">重置</button>
+        </div>
         <div class="row">
             <span>AlphaMode</span>
             <span class="option-bar">
@@ -67,7 +67,7 @@
         <div class="col">
             <span class="row-label">
                 Animations
-                <button onclick="showExportBox()">导出</button>
+                <button onclick="openExportWindow()">导出</button>
             </span>
             <ol class="list" id="animations"></ol>
         </div>
@@ -85,46 +85,10 @@
             <div>Height: <span id="resolution-height"></span>px</div>
         </div>
     </div>
-    <div id="export-overlay"></div>
-    <div id="export-box">
-        <div class="export-option label">
-            <label for="export-format">输出格式：</label>
-            <label for="export-framerate">帧率：</label>
-            <label for="export-animation">目标动画：</label>
-            <label for="export-path">输出目录：</label>
-        </div>
-        <div class="export-option input">
-            <select id="export-format">
-                <option selected>GIF</option>
-                <option>APNG</option>
-                <option>MP4</option>
-            </select>
-            <input type="number" value="24" min="1" max="60" id="export-framerate">
-            <select id="export-animation">
-                <option>--None--</option>
-            </select>
-            <span class="path-select">
-                <input type="text" id="export-path">
-                <button onclick="selectExportPath()">选择</button>
-            </span>
-        </div>
-
-        <span class="export-progress-show">
-            <span class="export-progress-wrapper">
-                <progress id="export-progress" value="0" max="1"></progress>
-            </span>
-            <span id="progress-show">0/0</span>
-        </span>
-
-        <span class="export-option button">
-            <button onclick="hideExportBox()" id="hide-export-box-button">关闭</button>
-            <button onclick="exportAnimation()" id="export-button">导出</button>
-        </span>
-    </div>
 </main>
-<script src="util.js"></script>
+<script src="js/util.js"></script>
 <script src="renderer.js"></script>
-<script src="listener.js"></script>
-<script src="operator.js"></script>
+<script src="js/listener.js"></script>
+<script src="js/operator.js"></script>
 </body>
 </html>
