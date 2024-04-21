@@ -1,6 +1,6 @@
 {
   "name": "spine-viewer",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Simple Viewer for Spine",
   "main": "main.js",
   "scripts": {
