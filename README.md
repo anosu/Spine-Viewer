@@ -20,10 +20,10 @@ Support exporting animation as GIF/APNG/MP4 with embedded ffmpeg.
 - The file clicked by your mouse when dragging will be start of reading.
 
 > select
-![select](https://ae01.alicdn.com/kf/S48f18d6a75b94f1094c76c9e857b7cd1T.png)
+![](https://ae01.alicdn.com/kf/S48f18d6a75b94f1094c76c9e857b7cd1T.png)
 
 > drag
-![drag](https://ae01.alicdn.com/kf/Sd48a55b8b02344599276cdc1d1f1cc2ak.png)
+![](https://ae01.alicdn.com/kf/Sd48a55b8b02344599276cdc1d1f1cc2ak.png)
 
 ## Preview
 
