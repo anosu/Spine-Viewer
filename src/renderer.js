@@ -150,7 +150,7 @@ function onLoaded(loader, res) {
                 try {
                     res[key].spineAtlas.pages.forEach(p => p.baseTexture.alphaMode = alphaMode);
                     const skeleton = new PIXI.spine.Spine(res[key].spineData);
-                    skeleton.position.set(app.renderer.width / 2, app.renderer.height / 2)
+                    skeleton.position.set(app.view.clientWidth / 2, app.view.clientHeight / 2)
                     skeleton.scale.x = skeleton.scale.y = scale
                     skeleton.state.timeScale = speed
                     skeleton.autoUpdate = true;
