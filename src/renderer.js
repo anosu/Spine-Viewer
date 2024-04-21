@@ -314,8 +314,9 @@ async function exportAnimation() {
     if (Number.isNaN(framerate) || framerate < 1 || framerate > 60) {
         framerate = format === 'MP4' ? 30 : 20
     }
+    const speed = parseFloat(speedInput.value)
     const delta = 1 / framerate
-    const frameNumber = Math.floor(duration / delta)
+    const frameNumber = Math.floor(duration / speed / delta)
 
     let frameIndex = 0
     getById('export-progress').value = '0'

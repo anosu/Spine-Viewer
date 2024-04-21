@@ -12,15 +12,11 @@ Support exporting animation as GIF/APNG/MP4 with embedded ffmpeg.
 ## Instructions
 
 - To import multi files, you can select and drag multi files into it.
-
 - Level relation is up to reading order when importing files. Earlier read with lower level.
-
 - Reading order is decided by order in which files are sorted in Explorer.
-
 - The file clicked by your mouse when dragging will be start of reading.
-
+- Only json and skel files can be read, the others will be skipped.
 - If multi files, only common skins and animations will be listed.
-
 - select order
 
 ![](https://ae01.alicdn.com/kf/S48f18d6a75b94f1094c76c9e857b7cd1T.png)
@@ -37,7 +33,7 @@ Support exporting animation as GIF/APNG/MP4 with embedded ffmpeg.
 
 ## Download
 
-In [Release](https://github.com/anosu/Spine-Viewer/releases)
+[Release](https://github.com/anosu/Spine-Viewer/releases)
 
 ## Build
 
