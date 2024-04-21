@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Spine Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./js/pixi.min.js"></script>
+    <script src="./js/pixi-spine.js"></script>
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+<header id="header">
+    <span class="title icon">
+        <img src="./assets/image/otogi.ico" alt="">
+        Spine Viewer
+    </span>
+    <button class="control-button minimize" onclick="preload.minimize()">一</button>
+    <button class="control-button maximize" onclick="preload.toggleMaximize()" id="maximize-icon">▢</button>
+    <button class="control-button close" onclick="preload.close()">✖</button>
+</header>
+<main id="main">
+    <div id="mask">拖拽骨架文件到此</div>
+    <div id="side">
+        <div class="row">
+            <input type="file" id="fileInput" multiple accept=".json,.skel" placeholder="da">
+            <button onclick="reload()">重载</button>
+        </div>
+        <div class="row">
+            <label for="zoom" class="option-label">缩放</label>
+            <input type="range" id="zoom" value="100" min="10" max="500" step="1">
+            <span id="zoom-show" class="option-value">100%</span>
+            <button onclick="resetZoom()">重置</button>
+        </div>
+        <div class="row">
+            <label for="speed" class="option-label">速度</label>
+            <input type="range" id="speed" value="1" min="0" max="5" step="0.01">
+            <span id="speed-show" class="option-value">1.00x</span>
+            <button onclick="resetSpeed()">重置</button>
+        </div>
+        <!--        <div class="row">-->
+        <!--            <label for="mix" class="option-label">Mix</label>-->
+        <!--            <input type="range" id="mix" value="0" min="0" max="5" step="0.1">-->
+        <!--            <span id="mix-show" class="option-value">0.0s</span>-->
+        <!--            <button onclick="resetMix()">重置</button>-->
+        <!--        </div>-->
+        <div class="row">
+            <span>AlphaMode</span>
+            <span class="option-bar">
+                <label class="alpha-mode-radio" for="NPM" id="NPM-label">NPM</label>
+                <label class="alpha-mode-radio checked" for="UNPACK" id="UNPACK-label">UNPACK</label>
+                <label class="alpha-mode-radio" for="PMA" id="PMA-label">PMA</label>
+                <input type="radio" name="alpha-mode" id="NPM" value="0" style="display: none">
+                <input type="radio" name="alpha-mode" id="UNPACK" value="1" style="display: none" checked>
+                <input type="radio" name="alpha-mode" id="PMA" value="2" style="display: none">
+            </span>
+        </div>
+        <div class="row">
+            <label for="colorInput">Background Color</label>
+            <input type="color" id="colorInput" value="#616066">
+        </div>
+
+        <div class="col">
+            <span class="animation-label">Skins</span>
+            <ol class="list" id="skins"></ol>
+        </div>
+        <div class="col">
+            <span class="row-label">
+                Animations
+                <button onclick="showExportBox()">导出</button>
+            </span>
+            <ol class="list" id="animations"></ol>
+        </div>
+        <div class="col">
+            <span class="row-label">
+                Slots
+                <button onclick="resetSlots()">重置</button>
+            </span>
+            <ol class="list" id="slots"></ol>
+        </div>
+    </div>
+    <div id="scene">
+        <div id="resolution">
+            <div>Width: <span id="resolution-width"></span>px</div>
+            <div>Height: <span id="resolution-height"></span>px</div>
+        </div>
+    </div>
+    <div id="export-overlay"></div>
+    <div id="export-box">
+        <div class="export-option label">
+            <label for="export-format">输出格式：</label>
+            <label for="export-framerate">帧率：</label>
+            <label for="export-animation">目标动画：</label>
+            <label for="export-path">输出目录：</label>
+        </div>
+        <div class="export-option input">
+            <select id="export-format">
+                <option selected>GIF</option>
+                <option>APNG</option>
+                <option>MP4</option>
+            </select>
+            <input type="number" value="24" min="1" max="60" id="export-framerate">
+            <select id="export-animation">
+                <option>--None--</option>
+            </select>
+            <span class="path-select">
+                <input type="text" id="export-path">
+                <button onclick="selectExportPath()">选择</button>
+            </span>
+        </div>
+
+        <span class="export-progress-show">
+            <span class="export-progress-wrapper">
+                <progress id="export-progress" value="0" max="1"></progress>
+            </span>
+            <span id="progress-show">0/0</span>
+        </span>
+
+        <span class="export-option button">
+            <button onclick="hideExportBox()" id="hide-export-box-button">关闭</button>
+            <button onclick="exportAnimation()" id="export-button">导出</button>
+        </span>
+    </div>
+</main>
+<script src="util.js"></script>
+<script src="renderer.js"></script>
+<script src="listener.js"></script>
+<script src="operator.js"></script>
+</body>
+</html>
