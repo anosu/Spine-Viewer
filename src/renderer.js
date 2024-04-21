@@ -215,10 +215,10 @@ function decorate(skeleton) {
             mouseY = event.clientY;
         }
     });
-    app.view.addEventListener('pointerup', (event) => {
+    app.view.addEventListener('pointerup', () => {
         isDragging = false;
     });
-    app.view.addEventListener('pointerout', (event) => {
+    app.view.addEventListener('pointerout', () => {
         isDragging = false;
     });
 
@@ -357,6 +357,5 @@ async function exportAnimation() {
 }
 
 const selectExportPath = async () => {
-    const p = await preload.selectExportPath()
-    getById('export-path').value = p
+    getById('export-path').value = await preload.selectExportPath()
 }

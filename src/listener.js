@@ -39,7 +39,7 @@ colorInput.addEventListener('input', () => {
 
 // 监听窗口大小改变
 let resizeTimer, resizeTimer2;
-const sceneObserver = new ResizeObserver(entries => {
+const sceneObserver = new ResizeObserver(() => {
     clearTimeout(resizeTimer)
     clearTimeout(resizeTimer2)
     app.view.style.opacity = '0'

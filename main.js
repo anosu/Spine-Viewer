@@ -43,7 +43,7 @@ const createWindow = (log) => {
 // 创建一个本地 HTTP 服务器
 const server = http.createServer((req, res) => {
     let filePath = decodeURIComponent(req.url.slice(1))
-    let fileExists = true
+    let fileExists;
     if (filePath.endsWith('.atlas')) {
         let txtPath = filePath + '.txt'
         filePath = (fs.existsSync(filePath) && filePath) || (fs.existsSync(txtPath) && txtPath)
@@ -99,7 +99,7 @@ app.whenReady().then(() => {
     })
 
     // 导出gif相关
-    ipcMain.handle('select-export-path', (ev) => {
+    ipcMain.handle('select-export-path', () => {
         const exportPath = dialog.showOpenDialogSync(win, {
             title: '输出文件夹',
             properties: ['openDirectory']
@@ -127,7 +127,7 @@ app.whenReady().then(() => {
                 instruction = `"${process.env.FFMPEG_PATH}" -y -r ${options.framerate} -i "${path.join(imagePath, '%05d.png')}" -vf "split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" "${path.join(outputPath, options.animation + '.gif')}"`
                 break
         }
-        const result = exec(instruction, (error, stdout, stderr) => {
+        exec(instruction, (error, stdout, stderr) => {
             win.webContents.send('debug', {stdout, stderr})
             fs.readdir(imagePath, (err, files) => {
                     files.forEach(file => {
