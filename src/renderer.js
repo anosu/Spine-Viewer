@@ -16,9 +16,11 @@ let slots = []
 const app = new PIXI.Application({
     resizeTo: scene,
     antialias: true,
+    autoDensity: true,
     // transparent: true,
     backgroundColor: 0x616066,
     preserveDrawingBuffer: true,
+    resolution: window.devicePixelRatio
 });
 // 未解决的问题：
 // 设置overflow:hidden会导致缩放窗口画布闪烁
