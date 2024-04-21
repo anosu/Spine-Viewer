@@ -11,6 +11,11 @@ Support exporting animation as GIF/APNG/MP4 with embedded ffmpeg.
 ![](https://ae01.alicdn.com/kf/S69207e50860b47ffa922d835c2f67f43I.png)
 ![](https://ae01.alicdn.com/kf/Sdb52e10cb8c84ba6bc221680961abecea.png)
 
+
+## Download
+
+In [Release](https://github.com/anosu/Spine-Viewer/releases)
+
 ## build
 
 ```
