@@ -1,3 +1,6 @@
+let progress = getById('export-progress')
+let progressShow = getById('progress-show')
+let exportAnimationList = getById('export-animation')
 let frameNumber = 0
 let availableAnimations = [];
 
@@ -13,7 +16,7 @@ const getDurationByAnimationName = (name) => {
 const getExportOptions = () => {
     const format = getById('export-format').value
     let framerate = parseInt(getById('export-framerate').value)
-    const animation = getById('export-animation').value
+    const animation = exportAnimationList.value
     const output = getById('export-path').value
     const duration = getDurationByAnimationName(animation)
     if (!duration || !output) return
@@ -23,7 +26,7 @@ const getExportOptions = () => {
     preload.sendExportOptions({format, framerate, animation, output, duration})
     getById('export-button').disabled = true
     getById('hide-export-box-button').disabled = true
-    getById('export-progress').value = '0'
+    progress.value = '0'
 }
 
 const selectExportPath = async () => {
@@ -32,46 +35,50 @@ const selectExportPath = async () => {
 
 const fillExportAnimations = (animations) => {
     availableAnimations = animations
-    getById('export-animation').innerHTML = ''
+    exportAnimationList.innerHTML = ''
     if (animations.length > 0) {
         animations.forEach(a => {
             const option = createTag('option')
             option.value = option.innerText = a.name
-            getById('export-animation').append(option)
+            exportAnimationList.append(option)
         })
     } else {
         const option = createTag('option')
         option.value = ''
         option.innerText = '--None--'
-        getById('export-animation').append(option)
+        exportAnimationList.append(option)
     }
 }
 
 
 // 监听接收可导出的动画
-preload.onReceiveExportAnimations(fillExportAnimations)
+preload.onReceiveExportAnimations((animations) => {
+    progressShow.innerText = '0/0'
+    progress.value = '0'
+    fillExportAnimations(animations)
+})
 
 // 监听导出完成
 preload.onExportComplete(() => {
     getById('export-button').disabled = false
     getById('hide-export-box-button').disabled = false
-    getById('export-progress').value = getById('export-progress').getAttribute('max')
-    getById('progress-show').innerText = '完成'
+    progress.value = progress.getAttribute('max')
+    progressShow.innerText = '完成'
 })
 
 preload.onSetExportProgress((data) => {
     switch (data.step) {
         case 0:
             frameNumber = data.frameNumber
-            getById('export-progress').setAttribute('max', `${data.frameNumber + 1}`)
-            getById('progress-show').innerText = `0/${data.frameNumber}`
+            progress.setAttribute('max', `${data.frameNumber + 1}`)
+            progressShow.innerText = `0/${data.frameNumber}`
             break
         case 1:
-            getById('export-progress').value = `${data.frameIndex}`
-            getById('progress-show').innerText = `${data.frameIndex}/${frameNumber}`
+            progress.value = `${data.frameIndex}`
+            progressShow.innerText = `${data.frameIndex}/${frameNumber}`
             break
         case 2:
-            getById('progress-show').innerText = '合成中...'
+            progressShow.innerText = '合成中...'
             break
     }
 })
