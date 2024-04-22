@@ -160,17 +160,18 @@ function onLoaded(loader, res) {
                             duration: a.duration.toFixed(3)
                         }
                     })
-                    if (skins.length === 0) {
-                        skins = skins.concat(skeletonSkins)
-                    } else {
-                        const toRemove = []
-                        for (const skin of skins) {
-                            if (!skeletonSkins.map(s => s.name).includes(skin.name)) {
-                                toRemove.push(skin.name)
-                            }
-                        }
-                        skins = skins.filter(s => !toRemove.includes(s.name))
-                    }
+                    skins = skins.concat(skeletonSkins.filter(s => !skins.includes(s)))
+                    // if (skins.length === 0) {
+                    //     skins = skins.concat(skeletonSkins)
+                    // } else {
+                    //     const toRemove = []
+                    //     for (const skin of skins) {
+                    //         if (!skeletonSkins.map(s => s.name).includes(skin.name)) {
+                    //             toRemove.push(skin.name)
+                    //         }
+                    //     }
+                    //     skins = skins.filter(s => !toRemove.includes(s.name))
+                    // }
                     if (animations.length === 0) {
                         animations = animations.concat(skeletonAnimations)
                     } else {

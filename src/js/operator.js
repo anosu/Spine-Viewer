@@ -46,8 +46,10 @@ const setAlphaMode = (mode) => {
 
 const setSkin = (skin) => {
     app.stage.children.forEach(a => {
-        a.skeleton.setSkinByName(skin)
-        a.skeleton.setSlotsToSetupPose()
+        if (a.skeleton.data.skins.some(s => s.name === skin)) {
+            a.skeleton.setSkinByName(skin)
+            a.skeleton.setSlotsToSetupPose()
+        }
     })
 }
 
