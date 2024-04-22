@@ -62,7 +62,7 @@ const alphaModeOptions = document.querySelectorAll('input[name="alpha-mode"]')
 alphaModeOptions.forEach((radio) => {
     radio.addEventListener('click', (ev) => {
         if (ev.target.checked) {
-            alphaMode = parseInt(ev.target.value)
+            alphaMode = +ev.target.value
             setAlphaMode(alphaMode)
             getById(ev.target.id + '-label').classList.add('checked')
             alphaModeOptions.forEach(option => {
@@ -74,24 +74,49 @@ alphaModeOptions.forEach((radio) => {
     })
 })
 
+// 监听背景透明
+getById('bg-transparent').addEventListener('click', (ev) => {
+    if (ev.target.checked) {
+        app.renderer.backgroundColor = 0
+        app.renderer.backgroundAlpha = 0
+        colorInput.disabled = true
+    } else {
+        app.renderer.backgroundColor = parseInt(colorInput.value.slice(1), 16)
+        app.renderer.backgroundAlpha = 1
+        colorInput.disabled = false
+    }
+})
+
 // 监听缩放滑块
 zoomInput.addEventListener('input', () => {
-    let scale = parseInt(zoomInput.value) / 100
+    let scale = +zoomInput.value / 100
     setZoom(scale)
     getById('zoom-show').innerText = zoomInput.value + '%'
 })
 
 // 监听速度滑块
 speedInput.addEventListener('input', () => {
-    let speed = parseFloat(speedInput.value)
+    let speed = +speedInput.value
     setSpeed(speed)
-    getById('speed-show').innerText = parseFloat(speedInput.value).toFixed(2) + 'x'
+    getById('speed-show').innerText = (+speedInput.value).toFixed(2) + 'x'
 })
 
+// 监听mix time滑块
 mixInput.addEventListener('input', () => {
-    let mix = parseFloat(mixInput.value)
+    let mix = +mixInput.value
     setMix(mix)
     getById('default-mix-show').innerText = mix.toFixed(1) + 's'
+})
+
+// 监听track选择
+document.querySelectorAll('input[name="track"]').forEach(t => {
+    t.addEventListener('change', () => {
+        track.current = +t.value
+        const selected = track[t.value]
+        document.querySelectorAll('input[name="animation"]').forEach(a => {
+            a.checked = a.value === selected
+        })
+    })
 })
 
 // 监听右键菜单

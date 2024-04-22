@@ -7,7 +7,7 @@ let availableAnimations = [];
 const getDurationByAnimationName = (name) => {
     for (const a of availableAnimations) {
         if (a.name === name) {
-            return parseFloat(a.duration)
+            return +a.duration
         }
     }
     return 0
@@ -15,7 +15,7 @@ const getDurationByAnimationName = (name) => {
 
 const getExportOptions = () => {
     const format = getById('export-format').value
-    let framerate = parseInt(getById('export-framerate').value)
+    let framerate = +getById('export-framerate').value
     const animation = exportAnimationList.value
     const output = getById('export-path').value
     const duration = getDurationByAnimationName(animation)
@@ -38,9 +38,11 @@ const fillExportAnimations = (animations) => {
     exportAnimationList.innerHTML = ''
     if (animations.length > 0) {
         animations.forEach(a => {
-            const option = createTag('option')
-            option.value = option.innerText = a.name
-            exportAnimationList.append(option)
+            if (a.duration > 0) {
+                const option = createTag('option')
+                option.value = option.innerText = a.name
+                exportAnimationList.append(option)
+            }
         })
     } else {
         const option = createTag('option')

@@ -45,7 +45,7 @@
             <button onclick="resetMix()">重置</button>
         </div>
         <div class="row">
-            <span>AlphaMode</span>
+            <span>透明度模式</span>
             <span class="option-bar">
                 <label class="alpha-mode-radio" for="NPM" id="NPM-label">NPM</label>
                 <label class="alpha-mode-radio checked" for="UNPACK" id="UNPACK-label">UNPACK</label>
@@ -56,24 +56,61 @@
             </span>
         </div>
         <div class="row">
-            <label for="colorInput">Background Color</label>
-            <input type="color" id="colorInput" value="#616066">
+            <label for="colorInput">背景颜色</label>
+            <span class="bg-wrap">
+                <span>透明</span>
+                <span class="i-checkbox-wrap">
+                    <input type="checkbox" id="bg-transparent" class="i-checkbox" checked>
+                    <label for="bg-transparent" class="i-label"></label>
+                </span>
+                <input type="color" id="colorInput" value="#616066">
+            </span>
         </div>
 
         <div class="col">
-            <span class="animation-label">Skins</span>
+            <span class="animation-label">皮肤</span>
             <ol class="list" id="skins"></ol>
         </div>
         <div class="col">
-            <span class="row-label">
-                Animations
+            <div class="row-label">
+                动画
+                <ol class="track-wrap">
+                    <li>
+                        <input type="radio" name="track" id="animation-track0" value="0" class="track-radio" checked>
+                        <label for="animation-track0" class="animation-track">0</label>
+                    </li>
+                    <li>
+                        <input type="radio" name="track" id="animation-track1" value="1" class="track-radio">
+                        <label for="animation-track1" class="animation-track">1</label>
+                    </li>
+                    <li>
+                        <input type="radio" name="track" id="animation-track2" value="2" class="track-radio">
+                        <label for="animation-track2" class="animation-track">2</label>
+                    </li>
+                    <li>
+                        <input type="radio" name="track" id="animation-track3" value="3" class="track-radio">
+                        <label for="animation-track3" class="animation-track">3</label>
+                    </li>
+                    <li>
+                        <input type="radio" name="track" id="animation-track4" value="4" class="track-radio">
+                        <label for="animation-track4" class="animation-track">4</label>
+                    </li>
+                    <li>
+                        <input type="radio" name="track" id="animation-track5" value="5" class="track-radio">
+                        <label for="animation-track5" class="animation-track">5</label>
+                    </li>
+                    <li>
+                        <input type="radio" name="track" id="animation-track6" value="6" class="track-radio">
+                        <label for="animation-track6" class="animation-track">6</label>
+                    </li>
+                </ol>
                 <button onclick="openExportWindow()">导出</button>
-            </span>
+            </div>
             <ol class="list" id="animations"></ol>
         </div>
         <div class="col">
             <span class="row-label">
-                Slots
+                插槽
                 <button onclick="resetSlots()">重置</button>
             </span>
             <ol class="list" id="slots"></ol>

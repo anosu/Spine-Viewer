@@ -12,14 +12,14 @@ let alphaMode = 1
 let availableAnimations = []
 let slots = []
 let isExporting = false
+let track = {current: 0}
 
 // pixi.js app
 const app = new PIXI.Application({
     resizeTo: scene,
     antialias: true,
     autoDensity: true,
-    // transparent: true,
-    backgroundColor: 0x616066,
+    transparent: true,
     preserveDrawingBuffer: true,
     resolution: window.devicePixelRatio
 });
@@ -62,12 +62,12 @@ function onLoaded(loader, res) {
         input.setAttribute('type', 'radio')
         input.setAttribute('name', 'skin')
         input.addEventListener('change', toggleSkin)
+        input.classList.add('list-option')
         if (skinList.innerHTML === '') {
-            li.classList.add('selected')
             input.checked = true
         }
         label.innerHTML += s
-        label.append(input)
+        li.append(input)
         li.append(label)
         skinList.append(li)
     })
@@ -82,10 +82,11 @@ function onLoaded(loader, res) {
         input.setAttribute('type', 'checkbox')
         input.setAttribute('name', 'animation')
         input.addEventListener('click', toggleAnimation)
+        input.classList.add('list-option')
         span.innerText = a.duration + 's'
         label.innerHTML += a.name
-        label.append(input)
         label.append(span)
+        li.append(input)
         li.append(label)
         animationList.append(li)
     })
@@ -117,7 +118,7 @@ function onLoaded(loader, res) {
             li.append(title)
             li.append(div)
             input.addEventListener('input', () => {
-                const alpha = parseInt(input.value) / 100
+                const alpha = +input.value / 100
                 slot.color.a = alpha
                 value.innerText = alpha.toFixed(2)
             })
@@ -139,9 +140,9 @@ function onLoaded(loader, res) {
         let skins = []
         let skeletons = []
         let animations = []
-        const speed = parseFloat(speedInput.value)
-        const scale = parseInt(zoomInput.value) / 100
-        const defaultMix = parseFloat(mixInput.value)
+        const speed = +speedInput.value
+        const scale = +zoomInput.value / 100
+        const defaultMix = +mixInput.value
         for (const key in res) {
             if (key.endsWith('skel') || key.endsWith('json')) {
                 try {
@@ -235,7 +236,7 @@ function decorate(skeleton) {
 
             entity.scale.x = entity.scale.y = newScale
 
-            zoomInput.value = parseFloat(newScale.toFixed(2)) * 100
+            zoomInput.value = +newScale.toFixed(2) * 100
             getById('zoom-show').innerText = zoomInput.value + '%'
 
             entity.x -= (event.offsetX - entity.x) * (entity.scale.x / originalScale - 1);
@@ -248,38 +249,22 @@ function decorate(skeleton) {
 
 // 回调函数
 function toggleSkin(ev) {
-    const skins = document.querySelectorAll('input[name="skin"]');
-    const li = ev.target.closest('li');
-    if (ev.target.checked) {
-        li.classList.add('selected');
-        skins.forEach(rb => {
-            if (rb !== ev.target) {
-                const rli = rb.closest('li');
-                rli.classList.remove('selected')
-            }
-        });
-        setSkin(ev.target.value)
-    }
+    setSkin(ev.target.value)
 }
 
 function toggleAnimation(ev) {
     const animations = document.querySelectorAll('input[name="animation"]');
-    const li = ev.target.closest('li');
     if (ev.target.checked) {
-        li.classList.add('selected');
+        track[track.current] = ev.target.value
         animations.forEach(rb => {
             if (rb !== ev.target) {
-                if (rb.checked) {
-                    const rli = rb.closest('li');
-                    rli.classList.remove('selected')
-                    rb.checked = false
-                }
+                rb.checked = false
             }
         });
-        playAnimation(0, ev.target.value, true)
+        playAnimation(track.current, ev.target.value, true)
     } else {
-        li.classList.remove('selected')
-        pauseAnimation()
+        track[track.current] = null
+        pauseAnimation(track.current)
     }
 }
 
@@ -288,18 +273,9 @@ function openExportWindow() {
     preload.openExportWindow(availableAnimations)
 }
 
-function getDurationByAnimationName(name) {
-    for (const a of availableAnimations) {
-        if (a.name === name) {
-            return parseFloat(a.duration)
-        }
-    }
-    return 0
-}
-
 async function exportAnimation(options) {
     const {format, framerate, animation, output, duration} = options
-    const speed = parseFloat(speedInput.value)
+    const speed = +speedInput.value
     const delta = 1 / framerate
     const frameNumber = Math.floor(duration / speed / delta)
 

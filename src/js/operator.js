@@ -53,15 +53,21 @@ const setSkin = (skin) => {
 
 const playAnimation = (track, animation, loop) => {
     app.stage.children.forEach(a => {
-        a.state.timeScale = parseFloat(speedInput.value)
+        a.state.timeScale = +speedInput.value
         a.state.setAnimation(track, animation, loop)
     })
 }
 
-const pauseAnimation = () => {
-    // app.stage.children.forEach(a => a.autoUpdate = false)
-    // setSpeed(0)
-    app.stage.children.forEach(a => a.state.tracks = [])
+const pauseAnimation = (trackIndex) => {
+    let noTrack = true
+    for (let i = 0; i < 7; i++) {
+        noTrack &&= !track[i]
+    }
+    if (noTrack) {
+        app.stage.children.forEach(a => a.state.tracks = [])
+    } else {
+        app.stage.children.forEach(a => a.state.setEmptyAnimation(trackIndex))
+    }
 }
 
 const resetSlots = () => {
