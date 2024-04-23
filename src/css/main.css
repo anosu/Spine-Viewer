@@ -173,7 +173,7 @@ button {
 }
 
 #fileInput {
-    width: 200px;
+    width: 150px;
     cursor: pointer;
 }
 
@@ -316,6 +316,11 @@ input.list-option {
 
 .option-value {
     width: 45px;
+}
+
+.slot-title {
+    width: 250px;
+    overflow: hidden;
 }
 
 .slot-alpha-value {

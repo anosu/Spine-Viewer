@@ -24,7 +24,14 @@
     <div id="side">
         <div class="row">
             <input type="file" id="fileInput" multiple accept=".json,.skel" placeholder="da">
-            <button onclick="reload()">重载</button>
+            <span style="display:flex;gap: 7px">
+                <span>叠加</span>
+                <span class="i-checkbox-wrap" style="margin-bottom: 2px">
+                    <input type="checkbox" id="superposition" class="i-checkbox">
+                    <label for="superposition" class="i-label"></label>
+                </span>
+            </span>
+            <button onclick="reload()">重置</button>
         </div>
         <div class="row">
             <label for="zoom" class="option-label">缩放</label>
@@ -65,6 +72,9 @@
                 </span>
                 <input type="color" id="colorInput" value="#616066">
             </span>
+        </div>
+        <div class="row">
+            <button onclick="resetPosition()" style="width: 70px">重置位置</button>
         </div>
 
         <div class="col">

@@ -53,6 +53,10 @@ const setSkin = (skin) => {
     })
 }
 
+const resetPosition = () => {
+    app.stage.children.forEach(a => a.position.set(scene.clientWidth / 2, scene.clientHeight / 2))
+}
+
 const playAnimation = (track, animation, loop) => {
     app.stage.children.forEach(a => {
         a.state.timeScale = +speedInput.value

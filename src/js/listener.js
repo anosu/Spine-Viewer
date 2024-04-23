@@ -24,6 +24,11 @@ getById('main').addEventListener('drop', async (ev) => {
     }
 })
 
+// 监听叠加
+getById('superposition').addEventListener('click', (ev) => {
+    superposition = ev.target.checked
+})
+
 // 监听选择文件
 fileInput.addEventListener('change', async () => {
     if (fileInput.files.length > 0) {
@@ -118,6 +123,58 @@ document.querySelectorAll('input[name="track"]').forEach(t => {
         })
     })
 })
+
+
+// 监听滚轮缩放和拖拽
+let isDragging = false;
+let mouseX, mouseY, deltaX, deltaY;
+app.view.addEventListener('pointerdown', (event) => {
+    if (event.button === 0) {
+        isDragging = true;
+        mouseX = event.clientX;
+        mouseY = event.clientY;
+    }
+});
+app.view.addEventListener('pointermove', (event) => {
+    if (isDragging) {
+        deltaX = event.clientX - mouseX;
+        deltaY = event.clientY - mouseY;
+
+        app.stage.children.forEach(skeleton => {
+            skeleton.x += deltaX;
+            skeleton.y += deltaY;
+        })
+
+        mouseX = event.clientX;
+        mouseY = event.clientY;
+    }
+});
+app.view.addEventListener('pointerup', () => {
+    isDragging = false;
+});
+app.view.addEventListener('pointerout', () => {
+    isDragging = false;
+});
+
+app.view.addEventListener('wheel', (event) => {
+    event.preventDefault();
+    const noEmpty = app.stage.children.length > 0
+    const originalScale = noEmpty ? app.stage.children[0].scale.x : +(zoomInput.value / 100);
+    const scaleFactor = event.deltaY > 0 ? 0.95 : 1.05; // 根据滚轮方向调整缩放比例
+    const minScale = 0.1, maxScale = 5;
+    const newScale = Math.min(Math.max(originalScale * scaleFactor, minScale), maxScale)
+
+    if (noEmpty) {
+        app.stage.children.forEach(skeleton => {
+            skeleton.scale.x = skeleton.scale.y = newScale
+            skeleton.x -= (event.offsetX - skeleton.x) * (skeleton.scale.x / originalScale - 1);
+            skeleton.y -= (event.offsetY - skeleton.y) * (skeleton.scale.y / originalScale - 1);
+        })
+    }
+
+    zoomInput.value = +newScale.toFixed(2) * 100
+    getById('zoom-show').innerText = zoomInput.value + '%'
+});
 
 // 监听右键菜单
 scene.addEventListener('contextmenu', (ev) => {

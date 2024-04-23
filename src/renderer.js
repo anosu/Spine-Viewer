@@ -9,10 +9,12 @@ let skinList = getById('skins')
 let animationList = getById('animations')
 let slotList = getById('slots')
 let alphaMode = 1
+let slotIndex = 0
 let availableAnimations = []
 let slots = []
 let isExporting = false
 let track = {current: 0}
+let superposition = false
 
 // pixi.js app
 const app = new PIXI.Application({
@@ -31,7 +33,12 @@ scene.appendChild(app.view);
 const reload = () => {
     resetZoom()
     resetSpeed()
-    app.loader.load(onLoaded)
+    app.loader.reset()
+    app.stage.removeChildren()
+    skinList.innerHTML = ''
+    slotList.innerHTML = ''
+    animationList.innerHTML = ''
+    getById('animation-track0').click()
 }
 
 const loadFiles = (fileUrls) => {
@@ -43,16 +50,23 @@ const loadFiles = (fileUrls) => {
 
 // Spine加载函数
 function onLoaded(loader, res) {
-    const {skins, skeletons, animations} = loadSkeletons()
+    const {skins, skeletons} = loadSkeletons()
     if (!skeletons) {
         alert('无效或者不支持的文件')
         return
     }
-    skinList.innerHTML = ''
-    slotList.innerHTML = ''
-    animationList.innerHTML = ''
+    if (superposition) {
+        animationList.innerHTML = ''
+    } else {
+        slotIndex = 0
+        skinList.innerHTML = ''
+        slotList.innerHTML = ''
+        animationList.innerHTML = ''
+    }
 
+    let existedSkins = Array.from(skinList.children).map(li => li.children[0].value)
     skins.forEach(s => {
+        if (existedSkins.includes(s)) return
         const li = createTag('li')
         const label = createTag('label')
         const input = createTag('input')
@@ -71,7 +85,7 @@ function onLoaded(loader, res) {
         li.append(label)
         skinList.append(li)
     })
-    animations.forEach(a => {
+    availableAnimations.forEach(a => {
         const li = createTag('li')
         const label = createTag('label')
         const span = createTag('span')
@@ -101,8 +115,8 @@ function onLoaded(loader, res) {
             title.classList.add('slot-title')
             div.classList.add('slot-alpha')
             value.classList.add('slot-alpha-value')
-            label.setAttribute('for', `${skeleton.spineData.hash}-${slot.data.name}`)
-            input.setAttribute('id', `${skeleton.spineData.hash}-${slot.data.name}`)
+            label.setAttribute('for', `${slotIndex}-${slot.data.name}`)
+            input.setAttribute('id', `${slotIndex++}-${slot.data.name}`)
             input.setAttribute('type', 'range')
             input.setAttribute('name', 'slot')
             input.setAttribute('value', (slot.data.color.a * 100).toFixed())
@@ -132,14 +146,13 @@ function onLoaded(loader, res) {
             slots.push(slotData)
         }
     })
-    availableAnimations = animations
-    app.stage.removeChildren()
-    skeletons.forEach(skeleton => app.stage.addChild(decorate(skeleton)))
+    if (!superposition) app.stage.removeChildren()
+    skeletons.forEach(skeleton => app.stage.addChild(skeleton))
 
     function loadSkeletons() {
+        if (!superposition) availableAnimations = []
         let skins = []
         let skeletons = []
-        let animations = []
         const speed = +speedInput.value
         const scale = +zoomInput.value / 100
         const defaultMix = +mixInput.value
@@ -172,16 +185,16 @@ function onLoaded(loader, res) {
                     //     }
                     //     skins = skins.filter(s => !toRemove.includes(s.name))
                     // }
-                    if (animations.length === 0) {
-                        animations = animations.concat(skeletonAnimations)
+                    if (availableAnimations.length === 0) {
+                        availableAnimations = availableAnimations.concat(skeletonAnimations)
                     } else {
                         const toRemove = []
-                        for (const animation of animations) {
+                        for (const animation of availableAnimations) {
                             if (!skeletonAnimations.map(a => a.name).includes(animation.name)) {
                                 toRemove.push(animation.name)
                             }
                         }
-                        animations = animations.filter(a => !toRemove.includes(a.name))
+                        availableAnimations = availableAnimations.filter(a => !toRemove.includes(a.name))
                     }
                     skeletons.push(skeleton)
                 } catch (e) {
@@ -189,10 +202,9 @@ function onLoaded(loader, res) {
                 }
             }
         }
-        return {skins, skeletons, animations}
+        return {skins, skeletons}
     }
 }
-
 
 // Spine动画对象修饰函数
 function decorate(skeleton) {
@@ -251,6 +263,7 @@ function decorate(skeleton) {
 // 回调函数
 function toggleSkin(ev) {
     setSkin(ev.target.value)
+    resetSlots()
 }
 
 function toggleAnimation(ev) {
@@ -285,6 +298,11 @@ async function exportAnimation(options) {
 
     app.stage.children.forEach(a => a.autoUpdate = false)
     preload.prepareExport(animation).then(() => {
+        for (let i = 1; i < 7; i++) {
+            if (track[i]) {
+                playAnimation(i, track[i], true)
+            }
+        }
         playAnimation(0, animation, false)
         app.stage.children.forEach(a => a.update(0))
         setTimeout(animate, 100)
