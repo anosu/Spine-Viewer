@@ -5261,7 +5261,7 @@ this.PIXI.spine = this.PIXI.spine || {};
         /** Sets an empty animation for a track, discarding any queued animations, and sets the track entry's
          * {@link TrackEntry#mixduration}. An empty animation has no timelines and serves as a placeholder for mixing in or out.
          *
-         * Mixing out is done by setting an empty animation with a mix duration using either {@link #setEmptyAnimation()},
+         * Mixing out is done by setting an empty animation with a mix duration using either {@link #clearAnimation()},
          * {@link #setEmptyAnimations()}, or {@link #addEmptyAnimation()}. Mixing to an empty animation causes
          * the previous animation to be applied less and less over the mix duration. Properties keyed in the previous animation
          * transition to the value from lower tracks or to the setup pose value if no lower tracks key the property. A mix duration of
@@ -5280,9 +5280,9 @@ this.PIXI.spine = this.PIXI.spine || {};
         };
         /** Adds an empty animation to be played after the current or last queued animation for a track, and sets the track entry's
          * {@link TrackEntry#mixDuration}. If the track is empty, it is equivalent to calling
-         * {@link #setEmptyAnimation()}.
+         * {@link #clearAnimation()}.
          *
-         * See {@link #setEmptyAnimation()}.
+         * See {@link #clearAnimation()}.
          * @param delay If > 0, sets {@link TrackEntry#delay}. If <= 0, the delay set is the duration of the previous track entry
          *           minus any mix duration plus the specified `delay` (ie the mix ends at (`delay` = 0) or
          *           before (`delay` < 0) the previous track entry duration). If the previous entry is looping, its next
@@ -18468,7 +18468,7 @@ this.PIXI.spine = this.PIXI.spine || {};
         /** Sets an empty animation for a track, discarding any queued animations, and sets the track entry's
          * {@link TrackEntry#mixduration}. An empty animation has no timelines and serves as a placeholder for mixing in or out.
          *
-         * Mixing out is done by setting an empty animation with a mix duration using either {@link #setEmptyAnimation()},
+         * Mixing out is done by setting an empty animation with a mix duration using either {@link #clearAnimation()},
          * {@link #setEmptyAnimations()}, or {@link #addEmptyAnimation()}. Mixing to an empty animation causes
          * the previous animation to be applied less and less over the mix duration. Properties keyed in the previous animation
          * transition to the value from lower tracks or to the setup pose value if no lower tracks key the property. A mix duration of
@@ -18488,9 +18488,9 @@ this.PIXI.spine = this.PIXI.spine || {};
         };
         /** Adds an empty animation to be played after the current or last queued animation for a track, and sets the track entry's
          * {@link TrackEntry#mixDuration}. If the track is empty, it is equivalent to calling
-         * {@link #setEmptyAnimation()}.
+         * {@link #clearAnimation()}.
          *
-         * See {@link #setEmptyAnimation()}.
+         * See {@link #clearAnimation()}.
          * @param delay If > 0, sets {@link TrackEntry#delay}. If <= 0, the delay set is the duration of the previous track entry
          *           minus any mix duration plus the specified `delay` (ie the mix ends at (`delay` = 0) or
          *           before (`delay` < 0) the previous track entry duration). If the previous entry is looping, its next

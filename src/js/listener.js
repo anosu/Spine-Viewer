@@ -103,6 +103,7 @@ zoomInput.addEventListener('input', () => {
 speedInput.addEventListener('input', () => {
     let speed = +speedInput.value
     setSpeed(speed)
+    currentSpeed = speed
     getById('speed-show').innerText = (+speedInput.value).toFixed(2) + 'x'
 })
 

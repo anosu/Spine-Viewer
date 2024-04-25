@@ -15,6 +15,7 @@ let slots = []
 let isExporting = false
 let track = {current: 0}
 let superposition = false
+let currentSpeed = 1
 
 // pixi.js app
 const app = new PIXI.Application({
@@ -278,7 +279,7 @@ function toggleAnimation(ev) {
         playAnimation(track.current, ev.target.value, true)
     } else {
         track[track.current] = null
-        pauseAnimation(track.current)
+        clearAnimation(track.current)
     }
 }
 

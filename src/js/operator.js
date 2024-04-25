@@ -64,15 +64,20 @@ const playAnimation = (track, animation, loop) => {
     })
 }
 
-const pauseAnimation = (trackIndex) => {
-    let noTrack = true
-    for (let i = 0; i < 7; i++) {
-        noTrack &&= !track[i]
-    }
-    if (noTrack) {
-        app.stage.children.forEach(a => a.state.tracks = [])
+const clearAnimation = (trackIndex) => {
+    app.stage.children.forEach(a => a.state.setEmptyAnimation(trackIndex))
+}
+
+const pauseAnimation = () => {
+    const speed = speedInput.value
+    if (currentSpeed.toString() === speed) {
+        setSpeed(0)
+        speedInput.value = 0
+        getById('speed-show').innerText = '0.00x'
     } else {
-        app.stage.children.forEach(a => a.state.setEmptyAnimation(trackIndex))
+        setSpeed(currentSpeed)
+        speedInput.value = currentSpeed
+        getById('speed-show').innerText = currentSpeed.toFixed(2) + 'x'
     }
 }
 
