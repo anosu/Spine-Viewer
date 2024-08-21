@@ -1,6 +1,6 @@
 # Notice
 
-**This is a deprecated project, turn to a more stable one:**
+**This is a deprecated project, turn to a more stable version:**
 
 [https://github.com/anosu/Spine-Viewer-Vue](https://github.com/anosu/Spine-Viewer-Vue)
 
