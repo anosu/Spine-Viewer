@@ -1,3 +1,9 @@
+# Notice
+
+**This is a deprecated project, turn to a more stable one:**
+
+[https://github.com/anosu/Spine-Viewer-Vue](https://github.com/anosu/Spine-Viewer-Vue)
+
 # Spine-Viewer
 
 A simple viewer for spine.
